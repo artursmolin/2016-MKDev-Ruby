@@ -3,21 +3,15 @@ require 'date'
 require 'ostruct'
 
 require_relative 'movie.rb'
+KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors]
 
-KEYS = [:link, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors]
-
-
-
-class MoviesList
-
-
+class MoviesCollection 
+  
   def initialize(filename)
-    
-    @movies = CSV.read(filename, col_sep: '|', headers: KEYS).
-    map{|movie| OpenStruct.new(movie.to_h)}.
+    @filename = filename
+    @movies = CSV.read(filename, col_sep: '|', write_headers: :true, headers: KEYS).
     map{|film| Movie.new(film)}
   end
-
 
   def all
     puts @movies.first(5) #all films
@@ -31,24 +25,25 @@ class MoviesList
     @movies.
       select{|movie| movie.has_genre?(genre)}.
       select{|movie| movie.country==country}.
-      map{|movie| movie.title + " - " + movie.genre.to_s + " - " + movie.country}.first(5)
+      map{|movie| movie.title + " - " + movie.genre.to_s + " - " + movie.country}
   end
 
   def except_genre (genre)  #delete genre
     @movies.
       select{|movie| !movie.has_genre?(genre)}.
-      map{|movie| movie.title + " " + movie.genre.to_s}.first(5)
+      map{|movie| movie.title + " " + movie.genre.to_s}
   end
 
   def stats(field)
     if field == "date"
-      @movies.map{|movie| movie.date.mon if movie.date!=nil}.
+      @movies.map { |movie| (Date.parse(movie.date, '%Y-%m-%d').mon if movie.date.length == 10) }.
       group_by{|i| i}.collect{|month, group| [month, group.count]}.to_h.
-      delete_if{|key, value| key.nil?}.sort.first(5)
+      delete_if{|key, value| key.nil?}.sort.
+      map{ |month, quant| Date::MONTHNAMES[month] + ' - ' + quant.to_s }
     else
      @movies.map{|movie| movie.send(field)}.
      sort_by{|field| field}.group_by{|field| field}.
-     map{|field, group| [field, group.count]}.first(5)
+     map{|field, group| [field, group.count]}
    end
 end
 end

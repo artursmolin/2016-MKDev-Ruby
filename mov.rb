@@ -5,7 +5,7 @@ require_relative 'movie.rb'
 
 
 filename = "movies.txt"
-output = MoviesList.new(filename) 
+output = MoviesCollection.new(filename) 
 
 
 puts
