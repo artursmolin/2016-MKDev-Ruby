@@ -2,9 +2,11 @@
 
 class Movie
  
+ attr_reader :url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors
+ 
   def initialize(movie)
 
-    @link = movie.link
+    @url = movie.url
     @title = movie.title
     @year = movie.year
     @country = movie.country
@@ -12,7 +14,7 @@ class Movie
     @length = movie.length.to_i
     @rating = movie.rating
     @director = movie.director
-    @actors = movie.actors
+    @actors = movie.actors.split(',')
     @date = 
       case movie.date.length
         when 4
@@ -24,17 +26,12 @@ class Movie
       end
   end
 
-  attr_reader :link, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors
-
-  def show
-    puts "My title is #{@title}"
-  end
-
+  
 
   def has_genre?(genre)
     @genre.include?(genre)
   end
-
+  
 
   def to_s
       "#{@title} (#{@year}), #{@genre} - #{@director}; #{@actors}" 
