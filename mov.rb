@@ -5,21 +5,21 @@ require_relative 'movie.rb'
 
 
 filename = "movies.txt"
-output = MoviesCollection.new(filename) 
+films = MoviesCollection.new(filename) 
 
 
 puts
-puts output.all # весь массив
+puts films.all # весь массив
 
 puts
-puts output.sort_by("genre") # сортировка по заданному полю
+puts films.sort_by("title").first(5) # сортировка по заданному полю
 
 puts 
-puts output.filter("Comedy", "USA") # фильмы определенного жанра + сортировка по стране
+puts films.filter(year: '1993') # фильмы определенного жанра + сортировка по стране
 
 puts
-puts output.except_genre("Drama") #фильмы за исключением определенного жанра, отсортированные по дате
+puts films.except_genre("Sci-Fi").first(5) #фильмы за исключением определенного жанра, отсортированные по дате
 
-puts
-puts output.stats("date") # кол-во фильмов по запрашеваемому полю
+puts 
+puts films.stats("date").first(5) # кол-во фильмов по запрашеваемому полю
 

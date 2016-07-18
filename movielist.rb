@@ -10,7 +10,7 @@ class MoviesCollection
   def initialize(filename)
     @filename = filename
     @movies = CSV.read(filename, col_sep: '|', write_headers: :true, headers: KEYS).
-    map{|film| Movie.new(film)}
+      map{|film| Movie.new(film)}
   end
 
   def all
@@ -18,14 +18,16 @@ class MoviesCollection
   end
 
   def sort_by (field) # sort by any field
-     @movies.sort_by {|movie| movie.send(field)}.first(5)
-  end
-
-  def filter (genre, country) # sort_by genre
     @movies.
-      select{|movie| movie.has_genre?(genre)}.
-      select{|movie| movie.country==country}.
-      map{|movie| movie.title + " - " + movie.genre.to_s + " - " + movie.country}
+      sort_by {|movie| movie.send(field)}
+  end
+  
+  def filter(filters)
+  arr = []
+  filters.each do |key, val|
+    arr = @movies.select { |movie| movie.send(key) == val }
+  end
+  arr
   end
 
   def except_genre (genre)  #delete genre
@@ -36,14 +38,13 @@ class MoviesCollection
 
   def stats(field)
     if field == "date"
-      @movies.map { |movie| (Date.parse(movie.date, '%Y-%m-%d').mon if movie.date.length == 10) }.
-      group_by{|i| i}.collect{|month, group| [month, group.count]}.to_h.
-      delete_if{|key, value| key.nil?}.sort.
-      map{ |month, quant| Date::MONTHNAMES[month] + ' - ' + quant.to_s }
+      @movies.map { |movie| (Date.parse(movie.date, '%Y-%m-%d').mon if movie.date.length == 10) }.compact.
+        group_by{|i| i}.collect{|month, group| [month, group.count]}.to_h.sort.
+        map{ |month, quant| Date::MONTHNAMES[month] + ' - ' + quant.to_s }
     else
-     @movies.map{|movie| movie.send(field)}.
-     sort_by{|field| field}.group_by{|field| field}.
-     map{|field, group| [field, group.count]}
-   end
+      @movies.map{|movie| movie.send(field)}.
+       sort_by{|field| field}.group_by{|field| field}.
+       map{|field, group| [field, group.count]}
+  end
 end
 end

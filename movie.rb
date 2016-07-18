@@ -17,9 +17,9 @@ class Movie
   end
 
   def has_genre?(genre)
-    @genre.include?(genre)
+      @genre.include?(genre)
   end
-  
+
   def to_s
       "#{@title} (#{@year}), #{@genre} - #{@director}; #{@actors}" 
   end
