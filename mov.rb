@@ -21,5 +21,5 @@ puts
 puts films.except_genre('Comedy').first(5) #фильмы за исключением определенного жанра, отсортированные по дате
 
 puts 
-puts films.stats(:date).first(5) 
+puts films.stats(:actors) 
 
