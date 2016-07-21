@@ -9,11 +9,11 @@ class Movie
     @year = row[2]
     @country = row[3]
     @date = row[4]
-    @genre = row[5].to_s
+    @genre = row[5].split(',')
     @length = row[6].to_i
     @rating = row[7]
     @director = row[8]
-    @actors = row[9]
+    @actors = row[9].split(',')
   end
 
   def has_genre?(genre)

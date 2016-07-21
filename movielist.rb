@@ -19,7 +19,7 @@ class MoviesCollection
 
   def sort_by (field) # sort by any field
     @movies.
-      sort_by {|movie| movie.send(field)}
+      sort_by(&field)
   end
 
   def filter (filters)
@@ -39,9 +39,8 @@ class MoviesCollection
         map{ |month, quant| Date::MONTHNAMES[month] + ' - ' + quant.to_s }
     else
       @movies.
-        map {|movie| movie.send(field)}.compact.
-        map {|field| field.split(',')}.flatten.
-        group_by {|i| i}.
+        map(&field).compact.flatten.
+        group_by{|i| i}.
         map {|i, group| [i, group.count]}.sort
   end
 end
