@@ -33,14 +33,16 @@ class MoviesCollection
   end
 
   def stats(field)
-  def stats(field)
     if field == :date
       @movies.map { |movie| (Date.parse(movie.date, '%Y-%m-%d').mon if movie.date.length == 10) }.compact.
         group_by{|i| i}.collect{|month, group| [month, group.count]}.to_h.sort.
         map{ |month, quant| Date::MONTHNAMES[month] + ' - ' + quant.to_s }
     else
-      @movies.map {|movie| movie.send(field)}.compact.map {|field| field.split(',')}.flatten.
-      group_by {|i| i}.map {|i, group| [i, group.count]}.sort
+      @movies.
+        map {|movie| movie.send(field)}.compact.
+        map {|field| field.split(',')}.flatten.
+        group_by {|i| i}.
+        map {|i, group| [i, group.count]}.sort
   end
 end
 end
