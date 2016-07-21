@@ -22,11 +22,9 @@ class MoviesCollection
       sort_by {|movie| movie.send(field)}
   end
 
-
   def filter (filters)
-    filters.reduce(@movies) {|tar, (key, value)| tar.select{|movie| movie.send(key) == value }}
+    filters.reduce(@movies) {|filtered, (key, value)| filtered.select{|movie| movie.send(key) == value }}
   end
-
 
   def except_genre (genre)  #delete genre
     @movies.
@@ -35,6 +33,7 @@ class MoviesCollection
   end
 
   def stats(field)
+  def stats(field)
     if field == :date
       @movies.map { |movie| (Date.parse(movie.date, '%Y-%m-%d').mon if movie.date.length == 10) }.compact.
         group_by{|i| i}.collect{|month, group| [month, group.count]}.to_h.sort.
@@ -42,6 +41,6 @@ class MoviesCollection
     else
       @movies.map {|movie| movie.send(field)}.compact.map {|field| field.split(',')}.flatten.
       group_by {|i| i}.map {|i, group| [i, group.count]}.sort
-end
+  end
 end
 end
