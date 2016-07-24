@@ -3,7 +3,7 @@ require 'date'
 require 'ostruct'
 
 require_relative 'movie.rb'
-KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actors]
+KEYS = [:url, :title, :year, :country, :date, :genre, :length, :rating, :director, :actor]
 
 class MoviesCollection 
   
@@ -23,8 +23,9 @@ class MoviesCollection
   end
 
   def filter (filters)
-    filters.reduce(@movies) {|filtered, (key, value)| filtered.select{|movie| movie.send(key) == value }}
+    filters.reduce(@movies) {|filtered, (key, value)| filtered.select{|movies| movies.match?(key, value) }}
   end
+
 
   def except_genre (genre)  #delete genre
     @movies.
